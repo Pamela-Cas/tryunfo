@@ -33,3 +33,15 @@ margin: auto;
   padding: 7px;
   border-radius: 10px;
 }
+
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  min-width: 50%;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+}
