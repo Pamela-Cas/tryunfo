@@ -58,6 +58,13 @@ class App extends React.Component {
     });
   }
 
+  removeCard = (name) => {
+    this.setState((prevState) => ({
+      box: prevState.box.filter((card) => card.name !== name),
+      hasTrunfo: !(prevState.box.find((card) => card.name === name).superTrunfo),
+    }));
+  }
+
     isValidAttribute = (attribute) => {
       const minValue = 0;
       const maxValue = 90;
@@ -136,20 +143,28 @@ class App extends React.Component {
             cardImage={ image }
           />
           <div>
-
             {
               box.map((card) => (
-                <Card
-                  key={ card.name }
-                  cardName={ card.name }
-                  cardDescription={ card.description }
-                  cardAttr1={ card.attr1 }
-                  cardAttr2={ card.attr2 }
-                  cardAttr3={ card.attr3 }
-                  cardRare={ card.rare }
-                  cardTrunfo={ card.superTrunfo }
-                  cardImage={ card.image }
-                />))
+                <>
+                  <Card
+                    key={ card.name }
+                    cardName={ card.name }
+                    cardDescription={ card.description }
+                    cardAttr1={ card.attr1 }
+                    cardAttr2={ card.attr2 }
+                    cardAttr3={ card.attr3 }
+                    cardRare={ card.rare }
+                    cardTrunfo={ card.superTrunfo }
+                    cardImage={ card.image }
+                  />
+                  <button
+                    type="button"
+                    data-testid="delete-button"
+                    onClick={ () => this.removeCard(card.name) }
+                  >
+                    Excluir
+                  </button>
+                </>))
             }
           </div>
         </div>
