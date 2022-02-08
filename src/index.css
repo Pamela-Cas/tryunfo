@@ -12,36 +12,8 @@ code {
     monospace;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-}
-
-.titulo{
-  text-align: center;
-}
-
-label{
-margin: auto;
-}
-
-.btn-submit{
-  background-color: darkorchid;
-  color: azure;
-  width: 100px;
-  margin: auto;
-  padding: 7px;
-  border-radius: 10px;
-}
-
-.form {
+.loading {
   align-items: center;
   display: flex;
-  flex-direction: column;
-  min-width: 50%;
-}
-
-.main {
-  display: flex;
-  flex-direction: row;
+  justify-content: center;
 }

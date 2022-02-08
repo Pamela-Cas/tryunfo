@@ -12,16 +12,15 @@ class Form extends React.Component {
       cardImage,
       cardRare,
       cardTrunfo,
-      // hasTrunfo,
+      hasTrunfo,
       isSaveButtonDisabled,
       onInputChange,
       onSaveButtonClick,
     } = this.props;
     return (
       <form className="form">
-        Adicionar Cartas
         <label htmlFor="name-imput">
-          Nome Da Carta
+          Nome:
           <input
             type="text"
             data-testid="name-input"
@@ -31,7 +30,7 @@ class Form extends React.Component {
           />
         </label>
         <label htmlFor="description-input">
-          Descrição da carta
+          Descrição:
           <input
             type="textarea"
             name="description"
@@ -41,7 +40,7 @@ class Form extends React.Component {
           />
         </label>
         <label htmlFor="attr1">
-          Primeiro atributo da carta
+          Atributos:
           <input
             type="number"
             data-testid="attr1-input"
@@ -51,7 +50,6 @@ class Form extends React.Component {
           />
         </label>
         <label htmlFor="attr2">
-          Segundo atributo da carta
           <input
             type="number"
             data-testid="attr2-input"
@@ -61,7 +59,6 @@ class Form extends React.Component {
           />
         </label>
         <label htmlFor="attr3">
-          Terceiro atributo da carta
           <input
             type="number"
             data-testid="attr3-input"
@@ -70,18 +67,18 @@ class Form extends React.Component {
             onChange={ onInputChange }
           />
         </label>
-        <label htmlFor="image-imput">
-          Imagem da carta
+        <label htmlFor="image">
+          Imagem:
           <input
             type="text"
             data-testid="image-input"
-            name="image-input"
+            name="image"
             value={ cardImage }
             onChange={ onInputChange }
           />
         </label>
         <label htmlFor="rare">
-          Raridade da Carta
+          Raridade
           <select
             name="rare"
             id=""
@@ -94,16 +91,19 @@ class Form extends React.Component {
             <option value="muito raro">Muito raro</option>
           </select>
         </label>
-        <label htmlFor="superTrunfo">
-          Super Trunfo
-          <input
-            checked={ cardTrunfo }
-            type="checkbox"
-            name="superTrunfo"
-            data-testid="trunfo-input"
-            onChange={ onInputChange }
-          />
-        </label>
+        {hasTrunfo ? 'Você já tem um Super Trunfo em seu baralho'
+          : (
+            <label htmlFor="superTrunfo">
+              Super Trunfo
+              <input
+                checked={ cardTrunfo }
+                type="checkbox"
+                name="superTrunfo"
+                data-testid="trunfo-input"
+                onChange={ onInputChange }
+              />
+            </label>
+          )}
         <button
           type="submit"
           data-testid="save-button"
@@ -128,7 +128,7 @@ Form.propTypes = {
   cardImage: string.isRequired,
   cardRare: string.isRequired,
   cardTrunfo: bool.isRequired,
-  // hasTrunfo: bool.isRequired,
+  hasTrunfo: bool.isRequired,
   isSaveButtonDisabled: bool.isRequired,
   onInputChange: func.isRequired,
   onSaveButtonClick: func.isRequired,
