@@ -17,6 +17,7 @@ class App extends React.Component {
       isSaveButtonDisabled: true,
       hasTrunfo: false,
       box: [],
+      searchName: '',
 
     };
   }
@@ -114,7 +115,10 @@ class App extends React.Component {
         hasTrunfo,
         isSaveButtonDisabled,
         box,
+        searchName,
       } = this.state;
+      const cards = searchName ? box
+        .filter((card) => card.name.includes(searchName)) : box;
       return (
         <div>
           <h1>Tryunfo</h1>
@@ -143,8 +147,15 @@ class App extends React.Component {
             cardImage={ image }
           />
           <div>
+            <input
+              data-testid="name-filter"
+              type="text"
+              onChange={ this.handleChange }
+              name="searchName"
+              value={ searchName }
+            />
             {
-              box.map((card) => (
+              cards.map((card) => (
                 <>
                   <Card
                     key={ card.name }
