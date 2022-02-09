@@ -18,13 +18,14 @@ class App extends React.Component {
       hasTrunfo: false,
       box: [],
       searchName: '',
-
+      searchRare: 'todas',
     };
   }
 
   onSaveButtonClick = (event) => {
     event.preventDefault();
-    const { name,
+    const {
+      name,
       description,
       image,
       attr1,
@@ -32,10 +33,9 @@ class App extends React.Component {
       attr3,
       rare,
       superTrunfo,
-      hasTrunfo,
-    } = this.state;
-
-    const card = { name,
+      hasTrunfo } = this.state;
+    const card = {
+      name,
       description,
       image,
       attr1,
@@ -57,131 +57,152 @@ class App extends React.Component {
       rare: 'normal',
       hasTrunfo: hasTrunfo || superTrunfo,
     });
-  }
+  };
 
   removeCard = (name) => {
     this.setState((prevState) => ({
       box: prevState.box.filter((card) => card.name !== name),
-      hasTrunfo: !(prevState.box.find((card) => card.name === name).superTrunfo),
+      hasTrunfo: !prevState.box.find((card) => card.name === name).superTrunfo,
     }));
-  }
+  };
 
-    isValidAttribute = (attribute) => {
-      const minValue = 0;
-      const maxValue = 90;
-      const attributeAsInt = parseInt(attribute, 10);
-      return attributeAsInt >= minValue && attributeAsInt <= maxValue;
-    };
+  isValidAttribute = (attribute) => {
+    const minValue = 0;
+    const maxValue = 90;
+    const attributeAsInt = parseInt(attribute, 10);
+    return attributeAsInt >= minValue && attributeAsInt <= maxValue;
+  };
 
-    validateAttributeSum = () => {
-      const maxAttributeAllowed = 210;
-      const { attr1, attr2, attr3 } = this.state;
-      const sum = parseInt(attr1, 10) + parseInt(attr2, 10) + parseInt(attr3, 10);
-      return sum <= maxAttributeAllowed;
-    };
+  validateAttributeSum = () => {
+    const maxAttributeAllowed = 210;
+    const { attr1, attr2, attr3 } = this.state;
+    const sum = parseInt(attr1, 10) + parseInt(attr2, 10) + parseInt(attr3, 10);
+    return sum <= maxAttributeAllowed;
+  };
 
-    validateFillForm = () => {
-      const { name, description, image, attr1, attr2, attr3 } = this.state;
-      const isValid = name
-            && description
-            && image
-            && this.isValidAttribute(attr1)
-            && this.isValidAttribute(attr2)
-            && this.isValidAttribute(attr3)
-            && this.validateAttributeSum();
-      this.setState({
-        isSaveButtonDisabled: !isValid,
-      });
-    };
+  validateFillForm = () => {
+    const { name, description, image, attr1, attr2, attr3 } = this.state;
+    const isValid = name
+      && description
+      && image
+      && this.isValidAttribute(attr1)
+      && this.isValidAttribute(attr2)
+      && this.isValidAttribute(attr3)
+      && this.validateAttributeSum();
+    this.setState({
+      isSaveButtonDisabled: !isValid,
+    });
+  };
 
-    handleChange = (event) => {
-      const { name, value } = event.target;
-      this.setState(() => (
-        { [name]: value }
-      ), this.validateFillForm);
-    };
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState(() => ({ [name]: value }), this.validateFillForm);
+  };
 
-    render() {
-      // renderiza os estados na tela
-      const {
-        name,
-        description,
-        image,
-        attr1,
-        attr2,
-        attr3,
-        rare,
-        superTrunfo,
-        hasTrunfo,
-        isSaveButtonDisabled,
-        box,
-        searchName,
-      } = this.state;
-      const cards = searchName ? box
-        .filter((card) => card.name.includes(searchName)) : box;
-      return (
-        <div>
-          <h1>Tryunfo</h1>
-          <Form
-            cardName={ name }
-            cardDescription={ description }
-            cardAttr1={ attr1 }
-            cardAttr2={ attr2 }
-            cardAttr3={ attr3 }
-            cardRare={ rare }
-            cardTrunfo={ superTrunfo }
-            cardImage={ image }
-            hasTrunfo={ hasTrunfo }
-            onInputChange={ this.handleChange }
-            isSaveButtonDisabled={ isSaveButtonDisabled }
-            onSaveButtonClick={ this.onSaveButtonClick }
+  applyFilter = () => {
+    const { searchName, searchRare, box } = this.state;
+    let cards = box;
+    cards = searchName ? cards.filter((card) => card.name.includes(searchName)) : cards;
+    cards = searchRare && searchRare !== 'todas'
+      ? cards.filter((card) => card.rare === searchRare)
+      : cards;
+    return cards;
+  };
+
+  render() {
+    // renderiza os estados na tela
+    const {
+      name,
+      description,
+      image,
+      attr1,
+      attr2,
+      attr3,
+      rare,
+      superTrunfo,
+      hasTrunfo,
+      isSaveButtonDisabled,
+      // box,
+      searchName,
+      searchRare,
+    } = this.state;
+    const cards = this.applyFilter();
+    return (
+      <div>
+        <h1>Tryunfo</h1>
+        <Form
+          cardName={ name }
+          cardDescription={ description }
+          cardAttr1={ attr1 }
+          cardAttr2={ attr2 }
+          cardAttr3={ attr3 }
+          cardRare={ rare }
+          cardTrunfo={ superTrunfo }
+          cardImage={ image }
+          hasTrunfo={ hasTrunfo }
+          onInputChange={ this.handleChange }
+          isSaveButtonDisabled={ isSaveButtonDisabled }
+          onSaveButtonClick={ this.onSaveButtonClick }
+        />
+        <Card
+          cardName={ name }
+          cardDescription={ description }
+          cardAttr1={ attr1 }
+          cardAttr2={ attr2 }
+          cardAttr3={ attr3 }
+          cardRare={ rare }
+          cardTrunfo={ superTrunfo }
+          cardImage={ image }
+        />
+        <section>
+          <input
+            data-testid="name-filter"
+            type="text"
+            onChange={ this.handleChange }
+            name="searchName"
+            value={ searchName }
           />
-          <Card
-            cardName={ name }
-            cardDescription={ description }
-            cardAttr1={ attr1 }
-            cardAttr2={ attr2 }
-            cardAttr3={ attr3 }
-            cardRare={ rare }
-            cardTrunfo={ superTrunfo }
-            cardImage={ image }
-          />
-          <div>
-            <input
-              data-testid="name-filter"
-              type="text"
+          <label htmlFor="rare">
+            Raridade
+            <select
+              name="searchRare"
+              data-testid="rare-filter"
+              value={ searchRare }
               onChange={ this.handleChange }
-              name="searchName"
-              value={ searchName }
-            />
-            {
-              cards.map((card) => (
-                <>
-                  <Card
-                    key={ card.name }
-                    cardName={ card.name }
-                    cardDescription={ card.description }
-                    cardAttr1={ card.attr1 }
-                    cardAttr2={ card.attr2 }
-                    cardAttr3={ card.attr3 }
-                    cardRare={ card.rare }
-                    cardTrunfo={ card.superTrunfo }
-                    cardImage={ card.image }
-                  />
-                  <button
-                    type="button"
-                    data-testid="delete-button"
-                    onClick={ () => this.removeCard(card.name) }
-                  >
-                    Excluir
-                  </button>
-                </>))
-            }
-          </div>
-        </div>
-      );
-    }
+            >
+              <option value="todas" selected>
+                todas
+              </option>
+              <option value="normal">normal</option>
+              <option value="raro">raro</option>
+              <option value="muito raro">muito raro</option>
+            </select>
+          </label>
+          {cards.map((card) => (
+            <>
+              <Card
+                key={ card.name }
+                cardName={ card.name }
+                cardDescription={ card.description }
+                cardAttr1={ card.attr1 }
+                cardAttr2={ card.attr2 }
+                cardAttr3={ card.attr3 }
+                cardRare={ card.rare }
+                cardTrunfo={ card.superTrunfo }
+                cardImage={ card.image }
+              />
+              <button
+                type="button"
+                data-testid="delete-button"
+                onClick={ () => this.removeCard(card.name) }
+              >
+                Excluir
+              </button>
+            </>
+          ))}
+        </section>
+      </div>
+    );
+  }
 }
 export default App;
-
-// referência: https://eslint.org/docs/rules/radix
